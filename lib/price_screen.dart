@@ -35,6 +35,21 @@ class _PriceScreenState extends State<PriceScreen> {
         });
   }
 
+  CupertinoPicker getPicker() {
+    List<Widget> value = [];
+    for (String item in currenciesList) {
+      var newValue = Text(item);
+      value.add(newValue);
+    }
+
+    return CupertinoPicker(
+        itemExtent: 32.0,
+        onSelectedItemChanged: (selectedIndex) {
+          print(selectedIndex);
+        },
+        children: value);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
