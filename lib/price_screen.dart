@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'coin_data.dart';
+import 'package:flutter/cupertino.dart';
+import 'dart:io' show Platform;
+import 'package:http/http.dart' as http;
+
+const apikey = '164A8B4F-3D72-42F7-98EA-14BCB9879FDE';
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -7,6 +13,28 @@ class PriceScreen extends StatefulWidget {
 
 class _PriceScreenState extends State<PriceScreen> {
   String selectedValue = 'USD';
+
+  DropdownButton<String> getDropDownItem() {
+    List<DropdownMenuItem<String>> dropDownList = [];
+
+    for (String item in currenciesList) {
+      var list = DropdownMenuItem(
+        child: Text(item),
+        value: item,
+      );
+      dropDownList.add(list);
+    }
+
+    return DropdownButton<String>(
+        value: selectedValue,
+        items: dropDownList,
+        onChanged: (value) {
+          setState(() {
+            selectedValue = value;
+          });
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,27 +71,7 @@ class _PriceScreenState extends State<PriceScreen> {
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.lightBlue,
-            child: DropdownButton<String>(
-                value: selectedValue,
-                items: [
-                  DropdownMenuItem(
-                    child: Text("USD"),
-                    value: 'USD',
-                  ),
-                  DropdownMenuItem(
-                    child: Text("BSD"),
-                    value: 'BSD',
-                  ),
-                  DropdownMenuItem(
-                    child: Text("AUD"),
-                    value: 'AUD',
-                  )
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    selectedValue = value;
-                  });
-                }),
+            child: getDropDownItem(),
           ),
         ],
       ),
