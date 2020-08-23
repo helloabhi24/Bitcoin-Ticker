@@ -50,6 +50,14 @@ class _PriceScreenState extends State<PriceScreen> {
         children: value);
   }
 
+  Widget getPlatform() {
+    if (Platform.isAndroid) {
+      return getDropDownItem();
+    } else if (Platform.isIOS) {
+      return getPicker();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
