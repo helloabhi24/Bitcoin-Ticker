@@ -14,6 +14,12 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
   String selectedValue = 'USD';
 
+  void callAPI() async {
+    http.Response response = await http.get(
+        'https://rest.coinapi.io/v1/exchangerate/BTC/USD?apikey=164A8B4F-3D72-42F7-98EA-14BCB9879FDE');
+    print(response.body);
+  }
+
   DropdownButton<String> getDropDownItem() {
     List<DropdownMenuItem<String>> dropDownList = [];
 
