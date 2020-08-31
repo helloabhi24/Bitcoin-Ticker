@@ -10,25 +10,28 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
+  Map<String, String> dataCurrency = {};
   String selectedValue = 'USD';
-  String values = '?';
   @override
   void initState() {
     super.initState();
-    getusd();
+    //getusd();
+    getData();
   }
 
-  void getusd() async {
-    print(selectedValue);
+  void getData() async {
     NetworkHelper networkHelper = NetworkHelper(usd: selectedValue);
-    double data = await networkHelper.getData();
-    try {
-      int convData = data.toInt();
-      setState(() {
-        values = convData.toString();
-      });
-    } catch (e) {
-      print(e);
+
+    for (String curr in cryptoList) {
+      var data = await networkHelper.getDataforCurrency(curr);
+      try {
+        // int convertData = data.toInt();
+        setState(() {
+          dataCurrency[curr] = data.toString();
+        });
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
@@ -49,7 +52,8 @@ class _PriceScreenState extends State<PriceScreen> {
         onChanged: (value) {
           setState(() {
             selectedValue = value;
-            getusd();
+            //getusd();
+            getData();
           });
         });
   }
@@ -87,27 +91,22 @@ class _PriceScreenState extends State<PriceScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.lightBlueAccent,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 BTC = $values $selectedValue',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
+          BoxCard(
+            //values: valueforBTC,
+            values: dataCurrency['BTC'] ?? '?',
+            selectedValue: selectedValue,
+            cryptoValue: cryptoList[0],
           ),
+          BoxCard(
+              // values: valueforETH,
+              values: dataCurrency['ETH'] ?? '?',
+              selectedValue: selectedValue,
+              cryptoValue: cryptoList[1]),
+          BoxCard(
+              // values: valueforLTC,
+              values: dataCurrency['LTC'] ?? '?',
+              selectedValue: selectedValue,
+              cryptoValue: cryptoList[2]),
           Container(
             height: 150.0,
             alignment: Alignment.center,
@@ -120,3 +119,71 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 }
+
+class BoxCard extends StatelessWidget {
+  const BoxCard(
+      {@required this.values,
+      @required this.selectedValue,
+      @required this.cryptoValue});
+
+  final String values;
+  final String selectedValue;
+  final String cryptoValue;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+      child: Card(
+        color: Colors.lightBlueAccent,
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+          child: Text(
+            '1 $cryptoValue = $values $selectedValue',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20.0,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// void getusd() async {
+//   print(selectedValue);
+//   NetworkHelper networkHelper = NetworkHelper(usd: selectedValue);
+//   double dataOfBTC = await networkHelper.getDataforBTC();
+//   double dataOfLTC = await networkHelper.getDataforLTC();
+//   double dataOfETH = await networkHelper.getDataforETH();
+//   try {
+//     int convDataBTC = dataOfBTC.toInt();
+//     setState(() {
+//       valueforBTC = convDataBTC.toString();
+//     });
+//   } catch (e) {
+//     print(e);
+//   }
+//   try {
+//     int convDataLTC = dataOfLTC.toInt();
+//     setState(() {
+//       valueforLTC = convDataLTC.toString();
+//     });
+//   } catch (e) {
+//     print(e);
+//   }
+//   try {
+//     int convDataETH = dataOfETH.toInt();
+//     setState(() {
+//       valueforETH = convDataETH.toString();
+//     });
+//   } catch (e) {
+//     print(e);
+//   }
+// }
